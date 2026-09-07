@@ -1,0 +1,251 @@
+---
+import { Image } from 'astro:assets';
+import type { Service } from '@/data/services';
+
+interface Props {
+  service: Service;
+}
+const { service: s } = Astro.props;
+const isDiagram = s.imageMode === 'diagram';
+---
+
+<section class:list={['shero', 'on-dark', { 'shero--diagram': isDiagram }]}>
+  <div class="shero__media">
+    <Image
+      src={s.image}
+      alt={s.imageAlt}
+      widths={isDiagram ? [520, 900] : [800, 1280, Math.min(s.image.width, 1900)]}
+      sizes={isDiagram ? '(max-width: 900px) 78vw, 440px' : '100vw'}
+      loading="eager"
+      fetchpriority="high"
+      quality={84}
+      style={`object-position:${s.objectPosition}`}
+    />
+    {!isDiagram && <span class="shero__shade" aria-hidden="true" />}
+  </div>
+
+  <div class="shero__plate-wrap">
+    <div class="shero__plate">
+      <nav class="shero__crumbs" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><a href="/services">Services</a></li>
+          <li aria-current="page">{s.navTitle}</li>
+        </ol>
+      </nav>
+
+      <div class="shero__head">
+        <span class="shero__num" aria-hidden="true">{s.number}</span>
+        <h1 class="shero__title">{s.title}</h1>
+      </div>
+
+      <span class="angled-rule shero__rule"></span>
+
+      <p class="shero__taglines">
+        {s.taglines.map((t) => <span>{t}</span>)}
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .shero {
+    position: relative;
+    background: var(--navy-900);
+    color: #fff;
+    display: grid;
+  }
+
+  .shero__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--navy-950);
+  }
+  .shero__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .shero__shade {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 45%;
+    background: linear-gradient(to top, rgba(0, 15, 43, 0.6), rgba(0, 15, 43, 0));
+    pointer-events: none;
+  }
+
+  .shero__plate {
+    background: var(--navy-800);
+    padding: clamp(1.75rem, 5vw, 3rem) var(--gutter) clamp(2rem, 5vw, 3rem);
+    position: relative;
+  }
+  .shero__plate::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 96px;
+    height: 5px;
+    background: var(--orange-500);
+  }
+
+  .shero__crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.7rem;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  }
+  .shero__crumbs li + li::before {
+    content: '/';
+    margin-right: 0.7rem;
+    color: var(--orange-500);
+  }
+  .shero__crumbs a {
+    transition: color 0.25s var(--ease);
+  }
+  .shero__crumbs a:hover {
+    color: #fff;
+  }
+  .shero__crumbs [aria-current] {
+    color: #fff;
+  }
+
+  .shero__head {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .shero__num {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--orange-500);
+  }
+  .shero__title {
+    font-size: var(--fs-h1);
+    color: #fff;
+    max-width: 16ch;
+  }
+  .shero__rule {
+    margin-top: 1.5rem;
+  }
+  .shero__taglines {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 1.25rem;
+    margin-top: 1.35rem;
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 0.9rem + 0.55vw, 1.35rem);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #ccd6e6;
+  }
+  .shero__taglines span {
+    position: relative;
+  }
+  .shero__taglines span + span::before {
+    content: '';
+    position: absolute;
+    left: -0.7rem;
+    top: 0.42em;
+    width: 6px;
+    height: 6px;
+    background: var(--orange-500);
+  }
+
+  /* ---------- DIAGRAM MODE: supplied graphic shown whole, never cropped ---------- */
+  .shero--diagram .shero__media {
+    aspect-ratio: auto;
+    display: grid;
+    place-items: center;
+    padding: clamp(1.75rem, 5vw, 3rem);
+    background:
+      radial-gradient(120% 90% at 50% 10%, rgba(23, 65, 154, 0.4), transparent 70%),
+      var(--navy-900);
+  }
+  .shero--diagram .shero__media :global(img) {
+    width: min(78vw, 420px);
+    height: auto;
+    object-fit: contain;
+  }
+
+  /* ---------- DESKTOP ---------- */
+  @media (min-width: 1024px) {
+    .shero {
+      display: block;
+      position: relative;
+      min-height: 620px;
+      height: clamp(620px, calc(100svh - var(--header-h) - 60px), 820px);
+    }
+    .shero__media {
+      position: absolute;
+      inset: 0;
+      aspect-ratio: auto;
+    }
+    .shero__plate-wrap {
+      position: absolute;
+      inset-inline: 0;
+      bottom: 0;
+      padding-inline: max(var(--gutter), calc((100% - 1680px) / 2 + var(--gutter)));
+      padding-bottom: clamp(2.5rem, 5vw, 4.5rem);
+      pointer-events: none;
+    }
+    .shero__plate {
+      pointer-events: auto;
+      width: min(720px, 58%);
+      background: rgba(0, 35, 94, 0.94);
+      backdrop-filter: blur(2px);
+      box-shadow: 0 30px 70px rgba(0, 12, 36, 0.4);
+      padding: clamp(2rem, 2.6vw, 3rem) clamp(2rem, 2.8vw, 3.25rem);
+    }
+
+    /* Diagram mode keeps a split layout so the graphic is never cropped */
+    .shero--diagram {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      align-items: center;
+      height: auto;
+      min-height: 0;
+      gap: 0;
+    }
+    .shero--diagram .shero__media {
+      position: relative;
+      inset: auto;
+      grid-column: 2;
+      padding: clamp(2.5rem, 5vw, 4.5rem);
+    }
+    .shero--diagram .shero__media :global(img) {
+      width: min(100%, 460px);
+    }
+    .shero--diagram .shero__plate-wrap {
+      position: relative;
+      inset: auto;
+      grid-column: 1;
+      grid-row: 1;
+      padding: 0;
+      pointer-events: auto;
+    }
+    .shero--diagram .shero__plate {
+      width: 100%;
+      background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+      padding: clamp(3rem, 6vw, 5rem) clamp(2rem, 4vw, 4rem) clamp(3rem, 6vw, 5rem)
+        max(var(--gutter), calc((100vw - 1680px) / 2 + var(--gutter)));
+    }
+    .shero--diagram .shero__plate::before {
+      left: max(var(--gutter), calc((100vw - 1680px) / 2 + var(--gutter)));
+      top: clamp(2rem, 4vw, 3.5rem);
+    }
+  }
+</style>

@@ -1,0 +1,342 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import CTASection from '@/components/CTASection.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Arrow from '@/components/Arrow.astro';
+
+import roustaboutImg from '@/assets/services/roustabout.jpg';
+import pumpingImg from '@/assets/services/pumping-well-operations.jpg';
+import safetyImg from '@/assets/safety/safety-environment.jpg';
+
+const foundations = [
+  {
+    k: 'Experience',
+    v: 'A team highly experienced in navigating remote and challenging environments, with deep familiarity for the technical and logistical demands of the energy sector.',
+  },
+  {
+    k: 'Trust',
+    v: 'We strive to build long-term, trusted partnerships with our clients so that their everyday successes, no matter the scale, drive our shared pride.',
+  },
+  {
+    k: 'Safety',
+    v: 'Every project is executed to the highest safety and quality standards in the industry, with rigorous HSE guidelines applied from day one.',
+  },
+];
+---
+
+<BaseLayout
+  title="About Us"
+  description="Experience, trust, and safety — the foundations United Oilfield Services is built on. A structured team providing a comprehensive suite of services across upstream and midstream operations."
+>
+  <PageHero
+    eyebrow="About Us"
+    title="Experience, Trust, and Safety"
+    lead="That is what the United Oilfield Services team is built on."
+  />
+
+  <!-- ============ OPENING STATEMENT ============ -->
+  <section class="section">
+    <div class="shell">
+      <div class="opening">
+        <div class="opening__label reveal">
+          <p class="eyebrow">Who we are</p>
+        </div>
+        <div class="opening__body reveal" style="--reveal-delay:90ms">
+          <p class="opening__lede">
+            With a steadfast focus on providing safe, effective solutions across our many
+            specialized divisions, we take immense pride in the work we do and the clients we serve.
+          </p>
+          <div class="prose">
+            <p>
+              We strive to build long-term, trusted partnerships with our clients so that their
+              everyday successes, no matter the scale, drive our shared pride. To deliver on this
+              commitment across every phase of your operations, our structured team provides a
+              comprehensive suite of multiple services tailored to meet all your oilfield needs.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOUNDATIONS ============ -->
+  <section class="section section--flush-top">
+    <div class="shell">
+      <div class="foundations">
+        {
+          foundations.map((f, i) => (
+            <article class="foundation reveal" style={`--reveal-delay:${i * 100}ms`}>
+              <span class="numeral foundation__n" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h2 class="foundation__k">{f.k}</h2>
+              <span class="angled-rule angled-rule--sm" />
+              <p class="foundation__v">{f.v}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PULL QUOTE OVER IMAGE ============ -->
+  <section class="statement">
+    <div class="statement__media">
+      <Image
+        src={roustaboutImg}
+        alt="United Oilfield Services crew working together on wellhead pipework at a lease site"
+        widths={[700, 1144]}
+        sizes="(max-width: 900px) 100vw, 45vw"
+        loading="lazy"
+        quality={82}
+      />
+    </div>
+    <div class="statement__text grid-texture on-dark">
+      <div class="statement__inner reveal">
+        <p class="eyebrow">Our mindset</p>
+        <blockquote>
+          <p>
+            We truly believe that our clients' success is our own, and we keep that mindset at the
+            forefront of every job, every single day.
+          </p>
+        </blockquote>
+        <p class="statement__after">
+          No matter your size, needs, or location, United Oilfield Services provides quality service
+          you can depend on. Our team executes every project to the highest safety and quality
+          standards in the industry.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SPECIALIZED DIVISIONS ============ -->
+  <section class="section bg-alt">
+    <div class="shell">
+      <div class="divisions">
+        <div class="divisions__head">
+          <SectionHeading
+            eyebrow="How we are structured"
+            title="Specialized divisions, one accountable partner"
+            lead="A structured team providing a comprehensive suite of multiple services — so a single relationship covers every phase of your operations."
+            class="reveal"
+          />
+          <div class="btn-row divisions__actions reveal">
+            <a href="/services" class="btn">Explore Our Services<Arrow /></a>
+            <a href="/safety" class="btn btn--ghost">Safety &amp; Environment</a>
+          </div>
+        </div>
+
+        <div class="divisions__media reveal img-frame img-frame--zoom img-frame--ticked">
+          <Image
+            src={pumpingImg}
+            alt="United Oilfield Services operator inspecting valves and pipework at a production facility"
+            widths={[700, 1200, 1875]}
+            sizes="(max-width: 980px) 100vw, 46vw"
+            loading="lazy"
+            quality={82}
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ QUALITY & SAFETY STANDARDS ============ -->
+  <section class="section standards">
+    <div class="shell">
+      <div class="standards__grid">
+        <div class="standards__media reveal img-frame img-frame--zoom">
+          <Image
+            src={safetyImg}
+            alt="Personal protective equipment arranged in front of an energy processing facility"
+            widths={[600, 1000, 1753]}
+            sizes="(max-width: 900px) 100vw, 40vw"
+            loading="lazy"
+            quality={82}
+          />
+        </div>
+        <div class="standards__body reveal" style="--reveal-delay:90ms">
+          <p class="eyebrow">Quality &amp; standards</p>
+          <h2 class="standards__title">Quality service you can depend on</h2>
+          <span class="angled-rule"></span>
+          <div class="prose standards__prose">
+            <p>
+              Our longevity in the oil and gas industry is a testament to our customer service and
+              technical capabilities. A commitment to these values has allowed our organization to
+              develop a diverse range of services with strong core competencies.
+            </p>
+            <p>
+              Safety and environmental stewardship are our top priorities. Every project, regardless
+              of scale, begins with strict adherence to our rigorous HSE guidelines — protecting our
+              team, our clients, and the communities where we operate.
+            </p>
+          </div>
+          <a href="/safety" class="link-arrow standards__link">
+            Safety &amp; Environmental Excellence
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+              <path d="M1 6h13M9.5 1 14.5 6l-5 5" stroke="currentColor" stroke-width="2"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTASection
+    eyebrow="Work with us"
+    title="Let's build a long-term partnership"
+    body="Tell us about your operation and we will put the right specialized team on it."
+  />
+</BaseLayout>
+
+<style>
+  /* ---------- OPENING ---------- */
+  .opening {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .opening__lede {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 1.1rem + 2vw, 2.9rem);
+    font-weight: 600;
+    line-height: 1.13;
+    text-transform: uppercase;
+    color: var(--navy-800);
+    max-width: 24ch;
+    margin-bottom: 1.9rem;
+  }
+
+  /* ---------- FOUNDATIONS ---------- */
+  .foundations {
+    display: grid;
+    gap: 0;
+    border-top: 3px solid var(--navy-800);
+  }
+  .foundation {
+    display: grid;
+    gap: 0.9rem;
+    justify-items: start;
+    padding-block: clamp(1.75rem, 3.5vw, 2.75rem);
+    border-bottom: 1px solid var(--rule);
+  }
+  .foundation__n {
+    color: var(--steel-200);
+  }
+  .foundation__k {
+    font-size: var(--fs-h3);
+    color: var(--navy-800);
+  }
+  .foundation__v {
+    color: var(--text-soft);
+    max-width: 42ch;
+    font-size: var(--fs-body);
+  }
+
+  /* ---------- STATEMENT ---------- */
+  .statement {
+    display: grid;
+  }
+  .statement__media {
+    min-height: 300px;
+    background: var(--navy-900);
+  }
+  .statement__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 45%;
+  }
+  .statement__text {
+    background: var(--navy-800);
+    color: #fff;
+    display: grid;
+    align-items: center;
+    padding: clamp(2.5rem, 6vw, 5rem) var(--gutter);
+  }
+  .statement__inner {
+    max-width: 52ch;
+    margin-inline: auto;
+  }
+  .statement blockquote p {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 1.1rem + 1.9vw, 2.6rem);
+    font-weight: 600;
+    line-height: 1.15;
+    text-transform: uppercase;
+    color: #fff;
+    margin-block: 1.35rem;
+    border-left: 4px solid var(--orange-500);
+    padding-left: clamp(1rem, 2vw, 1.6rem);
+  }
+  .statement__after {
+    color: #ccd6e6;
+    font-size: var(--fs-body-lg);
+    max-width: 48ch;
+  }
+
+  /* ---------- DIVISIONS ---------- */
+  .divisions {
+    display: grid;
+    gap: clamp(2rem, 4vw, 4rem);
+    align-items: center;
+  }
+  .divisions__actions {
+    margin-top: 2.25rem;
+  }
+  .divisions__media {
+    aspect-ratio: 4 / 3;
+  }
+
+  /* ---------- STANDARDS ---------- */
+  .standards__grid {
+    display: grid;
+    gap: clamp(2rem, 4vw, 4rem);
+    align-items: center;
+  }
+  .standards__media {
+    aspect-ratio: 4 / 3;
+  }
+  .standards__title {
+    font-size: var(--fs-h2);
+    color: var(--navy-800);
+    margin-block: 1.15rem;
+    max-width: 15ch;
+  }
+  .standards__prose {
+    margin-top: 1.75rem;
+  }
+  .standards__link {
+    margin-top: 1.9rem;
+  }
+
+  @media (min-width: 800px) {
+    .opening {
+      grid-template-columns: 190px 1fr;
+      gap: clamp(2rem, 4vw, 4rem);
+    }
+    .foundations {
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(1.5rem, 3vw, 3rem);
+    }
+  }
+  @media (min-width: 900px) {
+    .statement {
+      grid-template-columns: 1fr 1.1fr;
+    }
+    .statement__media {
+      min-height: 520px;
+    }
+  }
+  @media (min-width: 980px) {
+    .divisions {
+      grid-template-columns: 1.05fr 0.95fr;
+    }
+    .standards__grid {
+      grid-template-columns: 0.85fr 1.15fr;
+    }
+    .standards__media {
+      aspect-ratio: 3 / 3.4;
+    }
+  }
+</style>

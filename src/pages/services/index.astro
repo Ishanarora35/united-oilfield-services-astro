@@ -1,0 +1,130 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import ServiceIndex from '@/components/ServiceIndex.astro';
+import CTASection from '@/components/CTASection.astro';
+import { services } from '@/data/services';
+
+const disciplines = ['Cementing', 'Wireline Support', 'Casing & Capping'];
+---
+
+<BaseLayout
+  title="Services"
+  description="A comprehensive suite of oilfield services from United Oilfield Services — brine and production water, well and pump maintenance, pumping and well operations, roustabout, steaming, flowback, plug and abandonment, and supporting specialist disciplines."
+>
+  <PageHero
+    eyebrow="Services"
+    title="Multi-Service Oilfield Capability"
+    lead="A structured team providing a comprehensive suite of multiple services tailored to meet all your oilfield needs — across upstream and midstream operations."
+  >
+    <div class="phero-meta">
+      <p>
+        <span class="phero-meta__n">{String(services.length).padStart(2, '0')}</span>
+        <span class="phero-meta__l">Service divisions</span>
+      </p>
+      <p>
+        <span class="phero-meta__n">{String(disciplines.length).padStart(2, '0')}</span>
+        <span class="phero-meta__l">In-house specialist disciplines</span>
+      </p>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="shell">
+      <ServiceIndex />
+    </div>
+  </section>
+
+  <section class="section section--sm bg-alt disc">
+    <div class="shell">
+      <div class="disc__inner reveal">
+        <div>
+          <p class="eyebrow">Supporting specialist disciplines</p>
+          <h2 class="disc__title">Delivered in-house to keep decommissioning on schedule</h2>
+        </div>
+        <ul class="disc__list">
+          {disciplines.map((d) => <li>{d}</li>)}
+        </ul>
+        <a href="/services/specialist-disciplines" class="link-arrow">
+          View specialist disciplines
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+            <path d="M1 6h13M9.5 1 14.5 6l-5 5" stroke="currentColor" stroke-width="2"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <CTASection
+    eyebrow="Scope a project"
+    title="Not sure which services you need?"
+    body="Send us the location and the challenge, and we will point you to the right divisions."
+    secondaryLabel="Safety & Environment"
+    secondaryHref="/safety"
+  />
+</BaseLayout>
+
+<style>
+  .phero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem clamp(2rem, 5vw, 4rem);
+    margin-top: clamp(2rem, 4vw, 3rem);
+    padding-top: clamp(1.5rem, 3vw, 2.25rem);
+    border-top: 1px solid rgba(255, 255, 255, 0.22);
+  }
+  .phero-meta p {
+    display: grid;
+    gap: 0.2rem;
+  }
+  .phero-meta__n {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 1.6rem + 2.4vw, 3.5rem);
+    font-weight: 700;
+    line-height: 0.9;
+    color: #fff;
+  }
+  .phero-meta__l {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--orange-400);
+  }
+
+  .disc__inner {
+    display: grid;
+    gap: 1.75rem;
+    align-items: center;
+  }
+  .disc__title {
+    font-size: var(--fs-h3);
+    color: var(--navy-800);
+    margin-top: 0.9rem;
+    max-width: 20ch;
+  }
+  .disc__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .disc__list li {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--navy-800);
+    border: 1px solid var(--steel-300);
+    background: #fff;
+    padding: 0.65rem 1.05rem;
+  }
+
+  @media (min-width: 900px) {
+    .disc__inner {
+      grid-template-columns: 1.15fr auto auto;
+      gap: 2.5rem;
+    }
+  }
+</style>

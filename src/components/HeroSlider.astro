@@ -1,0 +1,463 @@
+---
+import { Image } from 'astro:assets';
+import Arrow from './Arrow.astro';
+import { heroSlides } from '@/data/heroSlides';
+import { site } from '@/data/site';
+
+const INTERVAL = 6500;
+
+/** Only request widths the master actually contains — never upscale at build time. */
+const widthsFor = (w: number) => {
+  const set = [640, 960, 1280, 1600, 2000, 2400].filter((x) => x <= w);
+  if (!set.includes(w)) set.push(w);
+  return set;
+};
+---
+
+<section
+  class="hero on-dark"
+  data-slider
+  data-interval={INTERVAL}
+  role="region"
+  aria-roledescription="carousel"
+  aria-label={`${site.shortName} — featured capabilities`}
+>
+  <div class="hero__stage">
+    <div class="hero__media">
+      {
+        heroSlides.map((slide, i) => (
+          <div
+            class:list={['hero__slide', { 'is-active': i === 0 }]}
+            data-slide={i}
+            data-pending={i === 0 ? undefined : ''}
+            style={`--op:${slide.objectPosition};--op-m:${slide.objectPositionMobile}`}
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`${i + 1} of ${heroSlides.length}`}
+            aria-hidden={i === 0 ? undefined : 'true'}
+          >
+            <Image
+              src={slide.image}
+              alt={slide.alt}
+              widths={widthsFor(slide.image.width)}
+              sizes="100vw"
+              loading={i === 0 ? 'eager' : 'lazy'}
+              fetchpriority={i === 0 ? 'high' : 'auto'}
+              decoding={i === 0 ? 'sync' : 'async'}
+              quality={82}
+            />
+          </div>
+        ))
+      }
+      <span class="hero__foot-shade" aria-hidden="true"></span>
+
+      <div class="hero__nav">
+        <button type="button" class="hero__ctrl" data-prev aria-label="Previous slide">
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+            <path d="M15 6H2M6.5 1 1.5 6l5 5" stroke="currentColor" stroke-width="2"></path>
+          </svg>
+        </button>
+        <button type="button" class="hero__ctrl" data-next aria-label="Next slide">
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+            <path d="M1 6h13M9.5 1 14.5 6l-5 5" stroke="currentColor" stroke-width="2"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="hero__plate-wrap">
+      <div class="hero__plate">
+        <p class="eyebrow hero__eyebrow">{site.tagline}</p>
+
+        <h1 class="hero__tagline">
+          {
+            heroSlides.map((slide, i) => (
+              <span
+                class:list={['hero__tag', { 'is-active': i === 0 }]}
+                data-tag={i}
+                aria-hidden={i === 0 ? undefined : 'true'}
+              >
+                {slide.taglineLines.map((line, li) => (
+                  <span class="hero__tag-line" style={`--l:${li}`}>
+                    {line}
+                  </span>
+                ))}
+              </span>
+            ))
+          }
+        </h1>
+
+        <span class="angled-rule hero__rule"></span>
+
+        <p class="hero__support">
+          {
+            heroSlides.map((slide, i) => (
+              <span
+                class:list={['hero__sup', { 'is-active': i === 0 }]}
+                data-sup={i}
+                aria-hidden={i === 0 ? undefined : 'true'}
+              >
+                {slide.support}
+              </span>
+            ))
+          }
+        </p>
+
+        <div class="btn-row hero__actions">
+          <a href="/services" class="btn btn--accent">Explore Our Services<Arrow /></a>
+          <a href="/contact" class="btn btn--on-dark">Contact UOS</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    background: var(--navy-900);
+    color: #fff;
+  }
+
+  /* ---------- MOBILE: photo panel above, solid navy plate below ---------- */
+  .hero__stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+  }
+
+  .hero__media {
+    position: relative;
+    grid-row: 1;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--navy-950);
+  }
+
+  .hero__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1.05s var(--ease);
+  }
+  .hero__slide[data-pending] {
+    display: none;
+  }
+  .hero__slide.is-active {
+    opacity: 1;
+  }
+  .hero__slide :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--op-m, 50% 50%);
+    transform: scale(1.001);
+  }
+  /* Slow, restrained drift — only on the active slide, motion-safe only */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__slide.is-active :global(img) {
+      animation: heroDrift 13s linear forwards;
+    }
+  }
+  @keyframes heroDrift {
+    from { transform: scale(1.001); }
+    to { transform: scale(1.055); }
+  }
+
+  /* Confined to the very bottom edge so photography stays clear */
+  .hero__foot-shade {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 34%;
+    background: linear-gradient(to top, rgba(0, 15, 43, 0.6), rgba(0, 15, 43, 0));
+    pointer-events: none;
+  }
+
+  /* ---------- MANUAL NAV ---------- */
+  .hero__nav {
+    position: absolute;
+    right: var(--gutter);
+    bottom: clamp(0.9rem, 3vw, 1.5rem);
+    display: flex;
+    gap: 0.4rem;
+    z-index: 3;
+  }
+  .hero__ctrl {
+    display: grid;
+    place-items: center;
+    width: clamp(40px, 11vw, 46px);
+    height: clamp(40px, 11vw, 46px);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: rgba(0, 15, 43, 0.4);
+    backdrop-filter: blur(6px);
+    transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease),
+      color 0.3s var(--ease);
+  }
+  .hero__ctrl:hover,
+  .hero__ctrl:focus-visible {
+    background: var(--orange-500);
+    border-color: var(--orange-500);
+    color: var(--navy-800);
+  }
+
+  .hero__plate-wrap {
+    grid-row: 2;
+  }
+  .hero__plate {
+    background: var(--navy-800);
+    padding: clamp(1.75rem, 6vw, 2.5rem) var(--gutter) clamp(1.75rem, 5vw, 2.25rem);
+    position: relative;
+  }
+  .hero__plate::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 84px;
+    height: 5px;
+    background: var(--orange-500);
+  }
+
+  .hero__eyebrow {
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+
+  .hero__tagline {
+    display: grid;
+    font-size: var(--fs-hero);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    color: #fff;
+  }
+  .hero__tag {
+    grid-area: 1 / 1;
+    display: block;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s var(--ease);
+  }
+  .hero__tag.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .hero__tag-line {
+    display: block;
+    overflow: hidden;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__tag-line {
+      transform: translateY(105%);
+      transition: transform 0.85s var(--ease-out);
+      transition-delay: calc(var(--l) * 90ms);
+    }
+    .hero__tag.is-active .hero__tag-line {
+      transform: none;
+    }
+  }
+
+  .hero__rule {
+    margin-top: 1.2rem;
+  }
+
+  .hero__support {
+    display: grid;
+    margin-top: 1.1rem;
+    max-width: 48ch;
+    font-size: var(--fs-body);
+    line-height: 1.6;
+    color: #ccd6e6;
+  }
+  .hero__sup {
+    grid-area: 1 / 1;
+    opacity: 0;
+    transition: opacity 0.5s var(--ease);
+  }
+  .hero__sup.is-active {
+    opacity: 1;
+  }
+
+  .hero__actions {
+    margin-top: 1.6rem;
+  }
+
+  /* ---------- TABLET ---------- */
+  @media (min-width: 620px) {
+    .hero__media {
+      aspect-ratio: 16 / 10;
+    }
+  }
+
+  /* ---------- DESKTOP: full-bleed cinematic with overlapping plate ---------- */
+  @media (min-width: 1024px) {
+    .hero__stage {
+      display: block;
+      position: relative;
+      height: clamp(600px, calc(100svh - var(--header-h)), 900px);
+    }
+    .hero__media {
+      position: absolute;
+      inset: 0;
+      aspect-ratio: auto;
+    }
+    .hero__slide :global(img) {
+      object-position: var(--op, 50% 50%);
+    }
+    .hero__foot-shade {
+      height: 46%;
+      background: linear-gradient(
+        to top,
+        rgba(0, 15, 43, 0.7),
+        rgba(0, 15, 43, 0.26) 45%,
+        rgba(0, 15, 43, 0)
+      );
+    }
+
+    .hero__nav {
+      right: max(var(--gutter), calc((100% - 1680px) / 2 + var(--gutter)));
+      bottom: clamp(2.5rem, 5vw, 4rem);
+    }
+
+    .hero__plate-wrap {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: clamp(2.5rem, 5vw, 4rem);
+      padding-inline: max(var(--gutter), calc((100% - 1680px) / 2 + var(--gutter)));
+      pointer-events: none;
+    }
+    .hero__plate {
+      pointer-events: auto;
+      width: min(600px, 50%);
+      padding: clamp(1.75rem, 2.3vw, 2.5rem) clamp(1.75rem, 2.4vw, 2.75rem)
+        clamp(1.75rem, 2.3vw, 2.35rem);
+      background: rgba(0, 35, 94, 0.94);
+      backdrop-filter: blur(2px);
+      box-shadow: 0 30px 70px rgba(0, 12, 36, 0.4);
+    }
+  }
+
+  @media (min-width: 1400px) {
+    .hero__plate {
+      width: min(660px, 44%);
+    }
+  }
+</style>
+
+<script>
+  class HeroSlider {
+    root: HTMLElement;
+    slides: HTMLElement[];
+    tags: HTMLElement[];
+    sups: HTMLElement[];
+    index = 0;
+    timer = 0;
+    interval: number;
+    reduce: boolean;
+
+    constructor(root: HTMLElement) {
+      this.root = root;
+      this.interval = Number(root.dataset.interval || 6500);
+      this.slides = [...root.querySelectorAll<HTMLElement>('[data-slide]')];
+      this.tags = [...root.querySelectorAll<HTMLElement>('[data-tag]')];
+      this.sups = [...root.querySelectorAll<HTMLElement>('[data-sup]')];
+      this.reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      this.bind();
+
+      // Bring the remaining slides into the document once the LCP image is settled,
+      // so the first transition never pops.
+      const warm = () => window.setTimeout(() => this.warmSlides(), 900);
+      document.readyState === 'complete' ? warm() : window.addEventListener('load', warm);
+
+      // Autoplay runs continuously. The only thing that stops it is the visitor's own
+      // reduced-motion setting; a hidden tab simply defers the next advance.
+      if (!this.reduce) this.play();
+    }
+
+    warmSlides() {
+      this.slides.forEach((s) => s.removeAttribute('data-pending'));
+    }
+
+    bind() {
+      this.root.querySelector('[data-next]')?.addEventListener('click', () => this.manual(1));
+      this.root.querySelector('[data-prev]')?.addEventListener('click', () => this.manual(-1));
+
+      document.addEventListener('visibilitychange', () =>
+        document.hidden ? this.stopTimer() : this.play(),
+      );
+
+      // Keyboard: arrows move between slides while the carousel has focus
+      this.root.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          this.manual(1);
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          this.manual(-1);
+        }
+      });
+
+      // Touch swipe
+      let x0 = 0;
+      let t0 = 0;
+      this.root.addEventListener(
+        'touchstart',
+        (e) => {
+          x0 = e.changedTouches[0].clientX;
+          t0 = Date.now();
+        },
+        { passive: true },
+      );
+      this.root.addEventListener(
+        'touchend',
+        (e) => {
+          const dx = e.changedTouches[0].clientX - x0;
+          if (Math.abs(dx) > 45 && Date.now() - t0 < 700) this.manual(dx < 0 ? 1 : -1);
+        },
+        { passive: true },
+      );
+    }
+
+    stopTimer() {
+      window.clearTimeout(this.timer);
+    }
+
+    play() {
+      if (this.reduce || document.hidden) return;
+      this.stopTimer();
+      this.timer = window.setTimeout(() => this.go(this.index + 1), this.interval);
+    }
+
+    /** Manual interaction: move, then restart the cycle from this slide. */
+    manual(dir: number) {
+      this.warmSlides();
+      this.go(this.index + dir);
+    }
+
+    go(next: number) {
+      const n = this.slides.length;
+      const i = ((next % n) + n) % n;
+      if (i === this.index) return;
+
+      const setActive = (els: HTMLElement[]) =>
+        els.forEach((el, idx) => {
+          const on = idx === i;
+          el.classList.toggle('is-active', on);
+          on ? el.removeAttribute('aria-hidden') : el.setAttribute('aria-hidden', 'true');
+        });
+
+      setActive(this.slides);
+      setActive(this.tags);
+      setActive(this.sups);
+
+      this.index = i;
+      this.play();
+    }
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-slider]').forEach((el) => new HeroSlider(el));
+</script>

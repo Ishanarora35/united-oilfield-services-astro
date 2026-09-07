@@ -1,0 +1,29 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  align?: 'start' | 'center';
+  as?: 'h1' | 'h2' | 'h3';
+  rule?: boolean;
+  class?: string;
+}
+const {
+  eyebrow, title, lead, align = 'start', as: Tag = 'h2', rule = true, class: cls = '',
+} = Astro.props;
+---
+<div class:list={['sh', `sh--${align}`, cls]}>
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <Tag class="sh__title">{title}</Tag>
+  {rule && <span class="angled-rule sh__rule"></span>}
+  {lead && <p class="lead sh__lead">{lead}</p>}
+  <slot />
+</div>
+
+<style>
+  .sh { display: grid; gap: 1.15rem; justify-items: start; }
+  .sh--center { justify-items: center; text-align: center; margin-inline: auto; }
+  .sh__title { font-size: var(--fs-h2); }
+  .sh__rule { margin-top: 0.15rem; }
+  .sh__lead { max-width: 62ch; margin-top: 0.35rem; }
+</style>

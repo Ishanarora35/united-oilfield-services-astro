@@ -1,0 +1,445 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ServiceHero from '@/components/ServiceHero.astro';
+import SubNav from '@/components/SubNav.astro';
+import CapabilityList from '@/components/CapabilityList.astro';
+import CTASection from '@/components/CTASection.astro';
+import Arrow from '@/components/Arrow.astro';
+import { services } from '@/data/services';
+
+export function getStaticPaths() {
+  return services.map((service, i) => ({
+    params: { slug: service.slug },
+    props: {
+      service,
+      prev: services[(i - 1 + services.length) % services.length],
+      next: services[(i + 1) % services.length],
+    },
+  }));
+}
+
+const { service: s, prev, next } = Astro.props;
+
+/** Alternate the intro composition so no two service pages read the same. */
+const flip = Number(s.number) % 2 === 0;
+const hasDetailedCaps = s.capabilities.some((c) => c.desc);
+---
+
+<BaseLayout title={s.title} description={s.metaDescription}>
+  <ServiceHero service={s} />
+  <SubNav current={s.slug} />
+
+  <!-- ============ OVERVIEW ============ -->
+  {
+    s.body.length > 0 && (
+  <section class="section ov">
+    <div class="shell">
+      <div class:list={['ov__grid', { 'ov__grid--flip': flip }]}>
+        <div class="ov__aside reveal">
+          <p class="eyebrow">Overview</p>
+          <p class="ov__pull">{s.taglines[0]}</p>
+        </div>
+        <div class="ov__body reveal" style="--reveal-delay:90ms">
+          <div class="prose ov__prose">
+            {s.body.map((p, i) => (i === 0 ? <p class="lead">{p}</p> : <p>{p}</p>))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+    )
+  }
+
+  <!-- ============ CAPABILITIES ============ -->
+  {
+    s.capabilities.length > 0 && (
+      <section
+        class:list={[
+          'section caps-sec',
+          hasDetailedCaps ? 'bg-alt' : 'bg-dark grid-texture on-dark',
+        ]}
+      >
+        <div class="shell">
+          <div class="caps-sec__grid">
+            <div class="caps-sec__head reveal">
+              <p class="eyebrow">Capabilities</p>
+              <h2 class="caps-sec__title">{s.capabilitiesHeading ?? 'What we deliver'}</h2>
+              <span class="angled-rule" />
+            </div>
+            <div class="caps-sec__list">
+              <CapabilityList items={s.capabilities} />
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ============ P&A TURNKEY ADVANTAGES ============ -->
+  {
+    s.advantages && (
+      <section class="section adv bg-dark grid-texture on-dark">
+        <div class="shell">
+          <div class="adv__head reveal">
+            <p class="eyebrow">The turnkey model</p>
+            <h2 class="adv__title">{s.advantagesHeading}</h2>
+            <span class="angled-rule" />
+            {s.advantagesIntro?.map((p) => <p class="lead adv__intro">{p}</p>)}
+          </div>
+
+          <div class="adv__grid">
+            {s.advantages.map((a, i) => (
+              <article class="adv__card reveal" style={`--reveal-delay:${i * 90}ms`}>
+                <span class="adv__n" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 class="adv__k">{a.title}</h3>
+                <p class="adv__v">{a.desc}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ============ SUPPORTING SPECIALIST DISCIPLINES ============ -->
+  {
+    s.subDisciplines && (
+      <section class="section subs">
+        <div class="shell">
+          <div class="subs__head reveal">
+            <p class="eyebrow">In-house disciplines</p>
+            <h2 class="subs__title">Delivered in-house to keep decommissioning projects on schedule</h2>
+            <span class="angled-rule" />
+          </div>
+
+          <div class="subs__list">
+            {s.subDisciplines.map((sub, i) => (
+              <article
+                class="sub"
+                id={sub.title
+                  .toLowerCase()
+                  .replace(/[^a-z0-9]+/g, '-')
+                  .replace(/(^-|-$)/g, '')}
+              >
+                <div class="sub__head reveal">
+                  <span class="numeral sub__n" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <h3 class="sub__title">{sub.title}</h3>
+                  <span class="angled-rule angled-rule--sm" />
+                </div>
+
+                <div class="sub__body reveal" style="--reveal-delay:80ms">
+                  <div class="prose sub__prose">
+                    {sub.body.map((p, pi) =>
+                      pi === 0 && sub.body.length > 1 ? (
+                        <p class="sub__lede">{p}</p>
+                      ) : (
+                        <p>{p}</p>
+                      ),
+                    )}
+                  </div>
+
+                  {sub.image && (
+                    <div class="sub__media img-frame img-frame--zoom img-frame--ticked">
+                      <Image
+                        src={sub.image}
+                        alt={sub.imageAlt ?? ''}
+                        widths={[560, 900, 1400]}
+                        sizes="(max-width: 980px) 100vw, 620px"
+                        loading="lazy"
+                        quality={82}
+                      />
+                    </div>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ============ PREV / NEXT ============ -->
+  <nav class="pager" aria-label="Service navigation">
+    <div class="shell">
+      <ul class="pager__list">
+        <li>
+          <a href={`/services/${prev.slug}`} class="pager__link pager__link--prev">
+            <span class="pager__meta">
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+                <path d="M15 6H2M6.5 1 1.5 6l5 5" stroke="currentColor" stroke-width="2"></path>
+              </svg>
+              Previous
+            </span>
+            <span class="pager__title">{prev.title}</span>
+          </a>
+        </li>
+        <li>
+          <a href={`/services/${next.slug}`} class="pager__link pager__link--next">
+            <span class="pager__meta">
+              Next
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+                <path d="M1 6h13M9.5 1 14.5 6l-5 5" stroke="currentColor" stroke-width="2"></path>
+              </svg>
+            </span>
+            <span class="pager__title">{next.title}</span>
+          </a>
+        </li>
+      </ul>
+      <div class="pager__all">
+        <a href="/services" class="btn btn--ghost btn--sm">All Services<Arrow /></a>
+      </div>
+    </div>
+  </nav>
+
+  <CTASection
+    eyebrow="Next step"
+    title={`Talk to us about ${s.navTitle.toLowerCase()}`}
+    body="Send us the scope and the location, and we will get straight back to you."
+  />
+</BaseLayout>
+
+<style>
+  /* ---------- OVERVIEW ---------- */
+  .ov__grid {
+    display: grid;
+    gap: clamp(1.75rem, 4vw, 4rem);
+  }
+  .ov__pull {
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 1rem + 1.5vw, 2.1rem);
+    font-weight: 600;
+    line-height: 1.13;
+    text-transform: uppercase;
+    color: var(--navy-800);
+    margin-top: 1.1rem;
+    max-width: 16ch;
+  }
+  .ov__prose {
+    max-width: 70ch;
+  }
+
+  /* ---------- CAPABILITIES ---------- */
+  .caps-sec__grid {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    align-items: start;
+  }
+  .caps-sec__title {
+    font-size: var(--fs-h2);
+    margin-block: 1.1rem 1.4rem;
+    max-width: 13ch;
+    color: var(--navy-800);
+  }
+  .bg-dark .caps-sec__title {
+    color: #fff;
+  }
+
+  /* ---------- ADVANTAGES ---------- */
+  .adv__title {
+    font-size: var(--fs-h2);
+    margin-block: 1.1rem 1.4rem;
+    max-width: 18ch;
+  }
+  .adv__intro {
+    margin-top: 1.5rem;
+    max-width: 68ch;
+  }
+  .adv__grid {
+    display: grid;
+    gap: 1px;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+  }
+  .adv__card {
+    background: var(--navy-900);
+    padding: clamp(1.6rem, 3vw, 2.5rem);
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+    position: relative;
+    transition: background-color 0.4s var(--ease);
+  }
+  .adv__card::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--orange-500);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s var(--ease-out);
+  }
+  .adv__card:hover {
+    background: #001b47;
+  }
+  .adv__card:hover::after {
+    transform: scaleX(1);
+  }
+  .adv__n {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--orange-500);
+  }
+  .adv__k {
+    font-size: var(--fs-h4);
+    color: #fff;
+  }
+  .adv__v {
+    color: var(--text-invert-soft);
+    font-size: var(--fs-body);
+  }
+
+  /* ---------- SUB-DISCIPLINES ---------- */
+  .subs__title {
+    font-size: var(--fs-h2);
+    color: var(--navy-800);
+    margin-block: 1.1rem 1.4rem;
+    max-width: 26ch;
+    hyphens: none;
+  }
+  .subs__list {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    display: grid;
+    gap: 0;
+  }
+  .sub {
+    display: grid;
+    gap: 1.15rem clamp(1.5rem, 4vw, 4rem);
+    padding-block: clamp(2.25rem, 4.5vw, 3.75rem);
+    border-top: 1px solid var(--rule);
+    align-items: start;
+  }
+  .sub:last-child {
+    border-bottom: 1px solid var(--rule);
+  }
+  .sub__head {
+    display: grid;
+    gap: 0.7rem;
+    justify-items: start;
+  }
+  .sub__n {
+    color: var(--steel-200);
+    line-height: 0.8;
+  }
+  .sub__title {
+    font-size: var(--fs-h3);
+    color: var(--navy-800);
+  }
+  .sub__prose {
+    max-width: 64ch;
+  }
+  /* A gentler step down from the opening paragraph than the page-level .lead */
+  .sub__lede {
+    font-size: var(--fs-body-lg);
+    line-height: 1.55;
+    color: var(--navy-800);
+  }
+  .sub__media {
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+    max-width: 620px;
+    aspect-ratio: 16 / 10;
+  }
+
+  /* ---------- PAGER ---------- */
+  .pager {
+    border-top: 1px solid var(--rule);
+    background: var(--steel-50);
+  }
+  .pager__list {
+    display: grid;
+    gap: 1px;
+    background: var(--rule);
+    border-inline: 1px solid var(--rule);
+  }
+  .pager__link {
+    display: grid;
+    gap: 0.5rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1.15rem, 2.5vw, 2rem);
+    background: var(--steel-50);
+    transition: background-color 0.35s var(--ease);
+    height: 100%;
+  }
+  .pager__link:hover {
+    background: #fff;
+  }
+  .pager__link--next {
+    text-align: right;
+    justify-items: end;
+  }
+  .pager__meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--orange-ink);
+  }
+  .pager__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h4);
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1.1;
+    color: var(--navy-800);
+    transition: color 0.3s var(--ease);
+  }
+  .pager__link:hover .pager__title {
+    color: var(--orange-600);
+  }
+  .pager__all {
+    display: flex;
+    justify-content: center;
+    padding-block: 1.5rem;
+  }
+
+  /* ---------- BREAKPOINTS ---------- */
+  @media (min-width: 800px) {
+    .ov__grid {
+      grid-template-columns: 0.72fr 1.28fr;
+    }
+    .ov__grid--flip {
+      grid-template-columns: 1.28fr 0.72fr;
+    }
+    .ov__grid--flip .ov__aside {
+      order: 2;
+    }
+    .ov__grid--flip .ov__body {
+      order: 1;
+    }
+    .adv__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .pager__list {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 980px) {
+    .caps-sec__grid {
+      grid-template-columns: 0.78fr 1.22fr;
+      gap: clamp(2.5rem, 5vw, 5rem);
+    }
+    .sub {
+      grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+      gap: clamp(2rem, 5vw, 5rem);
+    }
+  }
+  @media (min-width: 1200px) {
+    .adv__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

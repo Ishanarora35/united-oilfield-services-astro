@@ -1,0 +1,293 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import ContactForm from '@/components/ContactForm.astro';
+import Arrow from '@/components/Arrow.astro';
+import { site } from '@/data/site';
+import crewImg from '@/assets/services/roustabout.jpg';
+
+const looking = [
+  {
+    k: 'Dedicated',
+    v: 'People who take ownership of the job in front of them and see it through.',
+  },
+  {
+    k: 'Safety-minded',
+    v: 'Professionals who work to our HSE guidelines because they believe in them, not because they are told to.',
+  },
+  {
+    k: 'Ready to grow',
+    v: 'We are a growing team, and we want people who want to grow with it.',
+  },
+];
+---
+
+<BaseLayout
+  title="Careers"
+  description="Build your future with United Oilfield Services. We are always looking for dedicated, safety-minded professionals to join our growing team. Send us your resume today."
+>
+  <PageHero
+    eyebrow="Careers"
+    title="Build Your Future With UOS"
+    lead="Are you ready to build a rewarding career with United Oilfield Services?"
+  >
+    <div class="btn-row phero-actions">
+      <a href="#apply" class="btn btn--accent">Send Your Resume<Arrow /></a>
+      <a href={site.contact.emailHref} class="btn btn--on-dark">Email {site.contact.email}</a>
+    </div>
+  </PageHero>
+
+  <!-- ============ INTRO ============ -->
+  <section class="section">
+    <div class="shell">
+      <div class="intro">
+        <div class="intro__media reveal img-frame img-frame--zoom img-frame--ticked">
+          <Image
+            src={crewImg}
+            alt="United Oilfield Services crew working together on wellhead pipework at a lease location"
+            widths={[600, 1000, 1144]}
+            sizes="(max-width: 980px) 100vw, 42vw"
+            loading="lazy"
+            quality={82}
+          />
+        </div>
+
+        <div class="intro__body reveal" style="--reveal-delay:100ms">
+          <p class="eyebrow">Join our team</p>
+          <p class="intro__lede">
+            We are always looking for dedicated, safety-minded professionals to join our growing
+            team.
+          </p>
+          <div class="prose">
+            <p>
+              If you are interested in our current open positions, we want to hear from you. Send us
+              your resume or drop us a line today to get started.
+            </p>
+          </div>
+          <a href="#apply" class="link-arrow intro__link">
+            Send your resume
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+              <path d="M1 6h13M9.5 1 14.5 6l-5 5" stroke="currentColor" stroke-width="2"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHO WE LOOK FOR ============ -->
+  <section class="section section--flush-top">
+    <div class="shell">
+      <div class="looking">
+        {
+          looking.map((l, i) => (
+            <article class="looking__card reveal" style={`--reveal-delay:${i * 90}ms`}>
+              <span class="numeral looking__n" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h2 class="looking__k">{l.k}</h2>
+              <span class="angled-rule angled-rule--sm" />
+              <p class="looking__v">{l.v}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ OPEN POSITIONS ============ -->
+  <section class="section positions bg-dark grid-texture on-dark">
+    <div class="shell">
+      <div class="positions__inner">
+        <div class="positions__head reveal">
+          <p class="eyebrow">Open positions</p>
+          <h2 class="positions__title">Interested in our current open positions?</h2>
+          <span class="angled-rule"></span>
+          <p class="lead positions__lead">
+            We want to hear from you. Send us your resume or drop us a line today to get
+            started.
+          </p>
+        </div>
+
+        <div class="positions__card reveal" style="--reveal-delay:110ms">
+          <p class="positions__card-k">Apply directly</p>
+          <a href={site.contact.emailHref} class="positions__email">{site.contact.email}</a>
+          <p class="positions__or">or call</p>
+          <a href={site.contact.phoneHref} class="positions__phone">{site.contact.phone}</a>
+          <a href="#apply" class="btn btn--accent positions__btn">
+            Use the form<Arrow />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ APPLICATION FORM ============ -->
+  <section class="section apply" id="apply">
+    <div class="shell shell--narrow">
+      <div class="apply__head reveal">
+        <p class="eyebrow">Send your resume</p>
+        <h2 class="apply__title">Tell us about yourself</h2>
+        <span class="angled-rule"></span>
+        <p class="lead apply__lead">
+          Complete the form below and your details will be sent to our team. Attach your resume to
+          the email that opens, or send it straight to
+          <a href={site.contact.emailHref}>{site.contact.email}</a>.
+        </p>
+      </div>
+
+      <div class="apply__form reveal" style="--reveal-delay:80ms">
+        <ContactForm variant="careers" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .phero-actions {
+    margin-top: clamp(2rem, 4vw, 2.75rem);
+  }
+
+  /* ---------- INTRO ---------- */
+  .intro {
+    display: grid;
+    gap: clamp(2rem, 4vw, 4rem);
+    align-items: center;
+  }
+  .intro__media {
+    aspect-ratio: 4 / 3;
+  }
+  .intro__lede {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 1.1rem + 1.9vw, 2.6rem);
+    font-weight: 600;
+    line-height: 1.13;
+    text-transform: uppercase;
+    color: var(--navy-800);
+    margin-block: 1.15rem 1.75rem;
+    max-width: 20ch;
+  }
+  .intro__link {
+    margin-top: 1.9rem;
+  }
+
+  /* ---------- LOOKING FOR ---------- */
+  .looking {
+    display: grid;
+    gap: 0;
+    border-top: 3px solid var(--navy-800);
+  }
+  .looking__card {
+    display: grid;
+    gap: 0.9rem;
+    justify-items: start;
+    align-content: start;
+    padding-block: clamp(1.75rem, 3.5vw, 2.75rem);
+    border-bottom: 1px solid var(--rule);
+  }
+  .looking__n {
+    color: var(--steel-200);
+  }
+  .looking__k {
+    font-size: var(--fs-h3);
+    color: var(--navy-800);
+  }
+  .looking__v {
+    color: var(--text-soft);
+    max-width: 40ch;
+  }
+
+  /* ---------- POSITIONS ---------- */
+  .positions__inner {
+    display: grid;
+    gap: clamp(2rem, 4vw, 4rem);
+    align-items: center;
+  }
+  .positions__title {
+    font-size: var(--fs-h2);
+    margin-block: 1.1rem 1.4rem;
+    max-width: 16ch;
+  }
+  .positions__lead {
+    margin-top: 1.5rem;
+  }
+  .positions__card {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: clamp(1.75rem, 3.5vw, 2.75rem);
+    display: grid;
+    justify-items: start;
+    gap: 0.4rem;
+  }
+  .positions__card-k {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--orange-400);
+    margin-bottom: 0.4rem;
+  }
+  .positions__email,
+  .positions__phone {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #fff;
+    word-break: break-word;
+    transition: color 0.25s var(--ease);
+  }
+  .positions__email {
+    font-size: clamp(1.15rem, 0.95rem + 1vw, 1.65rem);
+  }
+  .positions__phone {
+    font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);
+  }
+  .positions__email:hover,
+  .positions__phone:hover {
+    color: var(--orange-400);
+  }
+  .positions__or {
+    font-size: 0.8rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-invert-soft);
+    margin-top: 1rem;
+  }
+  .positions__btn {
+    margin-top: 1.75rem;
+  }
+
+  /* ---------- APPLY ---------- */
+  .apply__title {
+    font-size: var(--fs-h2);
+    color: var(--navy-800);
+    margin-block: 1.1rem 1.4rem;
+  }
+  .apply__lead {
+    margin-top: 1.5rem;
+    margin-bottom: clamp(2.25rem, 4vw, 3rem);
+  }
+  .apply__lead a {
+    color: var(--navy-800);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (min-width: 800px) {
+    .looking {
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(1.5rem, 3vw, 3rem);
+    }
+  }
+  @media (min-width: 980px) {
+    .intro {
+      grid-template-columns: 0.85fr 1.15fr;
+    }
+    .positions__inner {
+      grid-template-columns: 1.15fr 0.85fr;
+    }
+  }
+</style>

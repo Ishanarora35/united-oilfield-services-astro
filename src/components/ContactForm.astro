@@ -1,0 +1,343 @@
+---
+import Arrow from './Arrow.astro';
+import { site } from '@/data/site';
+import { services } from '@/data/services';
+
+interface Props {
+  /** Pre-set the subject line (used on the careers page). */
+  variant?: 'inquiry' | 'careers';
+}
+const { variant = 'inquiry' } = Astro.props;
+const isCareers = variant === 'careers';
+---
+
+<form
+  class="cform"
+  data-contact-form
+  data-variant={variant}
+  data-mailto={site.contact.email}
+  novalidate
+>
+  <div class="cform__grid">
+    <div class="field">
+      <label for="cf-name">Full name <span aria-hidden="true">*</span></label>
+      <input id="cf-name" name="name" type="text" autocomplete="name" required />
+      <p class="field__err" data-err-for="cf-name" hidden>Please enter your name.</p>
+    </div>
+
+    <div class="field">
+      <label for="cf-email">Email address <span aria-hidden="true">*</span></label>
+      <input id="cf-email" name="email" type="email" autocomplete="email" required />
+      <p class="field__err" data-err-for="cf-email" hidden>Please enter a valid email address.</p>
+    </div>
+
+    <div class="field">
+      <label for="cf-phone">Phone</label>
+      <input id="cf-phone" name="phone" type="tel" autocomplete="tel" />
+    </div>
+
+    <div class="field">
+      <label for="cf-company">{isCareers ? 'Current or last employer' : 'Company'}</label>
+      <input id="cf-company" name="company" type="text" autocomplete="organization" />
+    </div>
+
+    {
+      !isCareers && (
+        <div class="field field--full">
+          <label for="cf-service">Service of interest</label>
+          <div class="field__select">
+            <select id="cf-service" name="service">
+              <option value="">General inquiry</option>
+              {services.map((s) => (
+                <option value={s.title}>{s.title}</option>
+              ))}
+            </select>
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+              <path d="M1 1.5 6 6.5l5-5" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </div>
+        </div>
+      )
+    }
+
+    {
+      isCareers && (
+        <div class="field field--full">
+          <label for="cf-role">Role you are interested in</label>
+          <input id="cf-role" name="role" type="text" />
+        </div>
+      )
+    }
+
+    <div class="field field--full">
+      <label for="cf-message">
+        {isCareers ? 'Tell us about your experience' : 'How can we help?'}
+        <span aria-hidden="true">*</span>
+      </label>
+      <textarea id="cf-message" name="message" rows="6" required></textarea>
+      <p class="field__err" data-err-for="cf-message" hidden>Please add a short message.</p>
+      {
+        isCareers && (
+          <p class="field__hint">
+            Attach your resume to the email that opens, or send it directly to{' '}
+            <a href={site.contact.emailHref}>{site.contact.email}</a>.
+          </p>
+        )
+      }
+    </div>
+  </div>
+
+  <div class="cform__foot">
+    <button type="submit" class="btn btn--accent cform__submit">
+      {isCareers ? 'Send Your Resume' : 'Send Inquiry'}
+      <Arrow />
+    </button>
+    <p class="cform__note">
+      Required fields are marked <span aria-hidden="true">*</span>.
+    </p>
+  </div>
+
+  <p class="cform__status" data-form-status role="status" aria-live="polite"></p>
+</form>
+
+<style>
+  .cform__grid {
+    display: grid;
+    gap: 1.35rem;
+  }
+  .field {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .field label {
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--navy-800);
+  }
+  .field label span {
+    color: var(--orange-500);
+  }
+  .field input,
+  .field textarea,
+  .field select {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    background: #fff;
+    border: 1px solid var(--steel-300);
+    border-radius: 0;
+    font-size: var(--fs-body);
+    color: var(--ink);
+    transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+    min-height: 52px;
+  }
+  .field textarea {
+    resize: vertical;
+    min-height: 150px;
+    line-height: 1.6;
+  }
+  .field input:hover,
+  .field textarea:hover,
+  .field select:hover {
+    border-color: var(--steel-400);
+  }
+  .field input:focus,
+  .field textarea:focus,
+  .field select:focus {
+    outline: none;
+    border-color: var(--navy-800);
+    box-shadow: inset 0 -3px 0 var(--orange-500);
+  }
+  .field input[aria-invalid='true'],
+  .field textarea[aria-invalid='true'] {
+    border-color: #c22e1f;
+    box-shadow: inset 0 -3px 0 #c22e1f;
+  }
+  .field__err {
+    font-size: 0.85rem;
+    color: #c22e1f;
+    font-weight: 500;
+  }
+  .field__hint {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+  }
+  .field__hint a {
+    color: var(--navy-800);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .field__select {
+    position: relative;
+    display: grid;
+  }
+  .field__select select {
+    appearance: none;
+    padding-right: 2.75rem;
+    cursor: pointer;
+  }
+  .field__select svg {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--navy-800);
+    pointer-events: none;
+  }
+
+  .cform__foot {
+    display: grid;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1.9rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--rule);
+  }
+  .cform__submit {
+    justify-self: start;
+  }
+  .cform__note {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+  }
+  .cform__note span {
+    color: var(--orange-500);
+  }
+
+  .cform__status {
+    margin-top: 1.25rem;
+    padding: 1rem 1.15rem;
+    font-size: 0.92rem;
+    border-left: 4px solid var(--orange-500);
+    background: var(--steel-50);
+    display: none;
+  }
+  .cform__status.is-shown {
+    display: block;
+  }
+  .cform__status.is-error {
+    border-left-color: #c22e1f;
+  }
+
+  @media (min-width: 620px) {
+    .cform__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 1.35rem 1.5rem;
+    }
+    .field--full {
+      grid-column: 1 / -1;
+    }
+    .cform__foot {
+      grid-template-columns: auto 1fr;
+      gap: 1.75rem;
+    }
+  }
+</style>
+
+<script>
+  const forms = document.querySelectorAll<HTMLFormElement>('[data-contact-form]');
+
+  forms.forEach((form) => {
+    const status = form.querySelector<HTMLElement>('[data-form-status]');
+    const required = [...form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[required]')];
+
+    const showError = (el: HTMLElement, show: boolean) => {
+      const err = form.querySelector<HTMLElement>(`[data-err-for="${el.id}"]`);
+      if (err) err.hidden = !show;
+      el.setAttribute('aria-invalid', String(show));
+      if (err) el.setAttribute('aria-describedby', show ? err.id || `${el.id}-err` : '');
+    };
+
+    const validate = (el: HTMLInputElement | HTMLTextAreaElement) => {
+      const ok = el.value.trim() !== '' && el.checkValidity();
+      showError(el, !ok);
+      return ok;
+    };
+
+    required.forEach((el) => {
+      el.addEventListener('blur', () => validate(el));
+      el.addEventListener('input', () => {
+        if (el.getAttribute('aria-invalid') === 'true') validate(el);
+      });
+    });
+
+    const setStatus = (msg: string, isError = false) => {
+      if (!status) return;
+      status.textContent = msg;
+      status.classList.add('is-shown');
+      status.classList.toggle('is-error', isError);
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const invalid = required.filter((el) => !validate(el));
+      if (invalid.length) {
+        invalid[0].focus();
+        setStatus('Please complete the highlighted fields and try again.', true);
+        return;
+      }
+
+      const data = new FormData(form);
+      const entries = [...data.entries()].filter(([, v]) => String(v).trim() !== '');
+      const isCareers = form.dataset.variant === 'careers';
+
+      // If the site owner configures a form endpoint, POST to it.
+      const endpoint = form.dataset.endpoint;
+      if (endpoint) {
+        const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+        try {
+          if (btn) btn.disabled = true;
+          setStatus('Sending…');
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { Accept: 'application/json' },
+            body: data,
+          });
+          if (!res.ok) throw new Error(String(res.status));
+          form.reset();
+          setStatus('Thank you — your message has been sent. We will be in touch shortly.');
+        } catch {
+          setStatus(
+            'Something went wrong sending your message. Please email us directly at ' +
+              form.dataset.mailto +
+              '.',
+            true,
+          );
+        } finally {
+          if (btn) btn.disabled = false;
+        }
+        return;
+      }
+
+      // Otherwise compose an email addressed to the company.
+      const labels: Record<string, string> = {
+        name: 'Name',
+        email: 'Email',
+        phone: 'Phone',
+        company: isCareers ? 'Current or last employer' : 'Company',
+        service: 'Service of interest',
+        role: 'Role of interest',
+        message: isCareers ? 'Experience' : 'Message',
+      };
+      const body = entries
+        .map(([k, v]) => `${labels[k] ?? k}:\n${String(v).trim()}`)
+        .join('\n\n');
+      const subject = isCareers
+        ? `Careers inquiry — ${data.get('name')}`
+        : `Website inquiry${data.get('service') ? ` — ${data.get('service')}` : ''} — ${data.get('name')}`;
+
+      window.location.href =
+        `mailto:${form.dataset.mailto}?subject=${encodeURIComponent(subject)}` +
+        `&body=${encodeURIComponent(body)}`;
+
+      setStatus(
+        isCareers
+          ? 'Your email client is opening with your details — attach your resume and hit send.'
+          : 'Your email client is opening with your inquiry. Press send and we will reply shortly.',
+      );
+    });
+  });
+</script>

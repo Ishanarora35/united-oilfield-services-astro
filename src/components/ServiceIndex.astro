@@ -1,0 +1,385 @@
+---
+import { Image } from 'astro:assets';
+import { services } from '@/data/services';
+
+interface Props {
+  /** Skip a service (used on individual service pages). */
+  exclude?: string;
+  showBlurb?: boolean;
+}
+const { exclude, showBlurb = true } = Astro.props;
+const items = services.filter((s) => s.slug !== exclude);
+---
+
+<div class="sidx" data-service-index>
+  <ul class="sidx__list">
+    {
+      items.map((s, i) => (
+        <li class="sidx__row reveal" style={`--reveal-delay:${Math.min(i, 6) * 55}ms`}>
+          <a
+            href={`/services/${s.slug}`}
+            class="sidx__link"
+            data-idx={i}
+            aria-label={`${s.title} — ${s.blurb}`}
+          >
+            <span class="sidx__num" aria-hidden="true">
+              {s.number}
+            </span>
+
+            <span class="sidx__thumb" aria-hidden="true">
+              <Image
+                src={s.image}
+                alt=""
+                widths={[180, 360]}
+                sizes="120px"
+                loading="lazy"
+                quality={78}
+                class:list={{ 'is-contain': s.imageMode === 'diagram' }}
+              />
+            </span>
+
+            <span class="sidx__body">
+              <span class="sidx__title">{s.title}</span>
+              <span class="sidx__tag">{s.taglines.join(' ')}</span>
+              {showBlurb && <span class="sidx__blurb">{s.blurb}</span>}
+            </span>
+
+            <span class="sidx__arrow" aria-hidden="true">
+              <svg width="20" height="14" viewBox="0 0 16 12" fill="none">
+                <path d="M1 6h13M9.5 1 14.5 6l-5 5" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <!-- Desktop-only cursor-following preview -->
+  <div class="sidx__preview" data-preview aria-hidden="true">
+    {
+      items.map((s, i) => (
+        <div class="sidx__preview-item" data-preview-item={i}>
+          <Image
+            src={s.image}
+            alt=""
+            widths={[480, 760]}
+            sizes="380px"
+            loading="lazy"
+            quality={80}
+            class:list={{ 'is-contain': s.imageMode === 'diagram' }}
+          />
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .sidx {
+    position: relative;
+  }
+
+  .sidx__list {
+    border-top: 1px solid var(--rule);
+  }
+  .bg-dark .sidx__list,
+  .on-dark .sidx__list {
+    border-color: var(--rule-dark);
+  }
+
+  .sidx__row {
+    border-bottom: 1px solid var(--rule);
+  }
+  .bg-dark .sidx__row,
+  .on-dark .sidx__row {
+    border-color: var(--rule-dark);
+  }
+
+  .sidx__link {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: 'num body arrow';
+    align-items: center;
+    gap: 0.7rem 1rem;
+    padding-block: clamp(1.15rem, 3vw, 1.65rem);
+    transition: background-color 0.4s var(--ease), padding-inline 0.4s var(--ease-out);
+  }
+  .sidx__link:hover,
+  .sidx__link:focus-visible {
+    background: var(--steel-50);
+    padding-inline: clamp(0.6rem, 1.6vw, 1.25rem);
+  }
+  .bg-dark .sidx__link:hover,
+  .on-dark .sidx__link:hover,
+  .bg-dark .sidx__link:focus-visible,
+  .on-dark .sidx__link:focus-visible {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .sidx__num {
+    grid-area: num;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--orange-ink);
+    align-self: start;
+    padding-top: 0.35em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sidx__thumb {
+    grid-area: thumb;
+    display: none;
+    width: 108px;
+    height: 74px;
+    overflow: hidden;
+    background: var(--navy-900);
+    flex: none;
+  }
+  .sidx__thumb :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .sidx__thumb :global(img.is-contain) {
+    object-fit: contain;
+    padding: 5px;
+  }
+
+  .sidx__body {
+    grid-area: body;
+    display: grid;
+    gap: 0.28rem;
+    min-width: 0;
+  }
+  .sidx__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 1rem + 1.5vw, 2.25rem);
+    font-weight: 700;
+    line-height: 1.05;
+    text-transform: uppercase;
+    color: var(--navy-800);
+    transition: color 0.3s var(--ease);
+  }
+  .bg-dark .sidx__title,
+  .on-dark .sidx__title {
+    color: #fff;
+  }
+  .bg-dark .sidx__num,
+  .on-dark .sidx__num {
+    color: var(--orange-500);
+  }
+  .bg-dark .sidx__tag,
+  .on-dark .sidx__tag {
+    color: #98a6bd;
+  }
+  .sidx__link:hover .sidx__title,
+  .sidx__link:focus-visible .sidx__title {
+    color: var(--orange-600);
+  }
+  .bg-dark .sidx__link:hover .sidx__title,
+  .on-dark .sidx__link:hover .sidx__title {
+    color: var(--orange-400);
+  }
+
+  .sidx__tag {
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #5c6980;
+  }
+  .sidx__blurb {
+    font-size: var(--fs-small);
+    color: var(--text-soft);
+    max-width: 58ch;
+    margin-top: 0.3rem;
+  }
+  .bg-dark .sidx__blurb,
+  .on-dark .sidx__blurb {
+    color: var(--text-invert-soft);
+  }
+
+  .sidx__arrow {
+    grid-area: arrow;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    flex: none;
+    color: var(--navy-800);
+    border: 1px solid var(--rule);
+    transition: background-color 0.35s var(--ease), color 0.35s var(--ease),
+      border-color 0.35s var(--ease), transform 0.4s var(--ease-out);
+  }
+  .bg-dark .sidx__arrow,
+  .on-dark .sidx__arrow {
+    color: #fff;
+    border-color: var(--rule-dark);
+  }
+  .sidx__link:hover .sidx__arrow,
+  .sidx__link:focus-visible .sidx__arrow {
+    background: var(--orange-500);
+    border-color: var(--orange-500);
+    color: #fff;
+    transform: translateX(4px);
+  }
+
+  .sidx__preview {
+    display: none;
+  }
+
+  /* ---------- SMALL SCREENS: show a thumbnail in-row ---------- */
+  @media (min-width: 480px) {
+    .sidx__link {
+      grid-template-columns: auto auto 1fr auto;
+      grid-template-areas: 'num thumb body arrow';
+      gap: 1.25rem;
+    }
+    .sidx__thumb {
+      display: block;
+    }
+    .sidx__num {
+      align-self: center;
+      padding-top: 0;
+    }
+  }
+
+  /* ---------- DESKTOP: floating preview replaces in-row thumbs ---------- */
+  @media (min-width: 1080px) {
+    .sidx__link {
+      grid-template-columns: auto 1fr auto;
+      grid-template-areas: 'num body arrow';
+      gap: 2rem;
+      padding-block: clamp(1.4rem, 2.2vw, 2rem);
+    }
+    .sidx__thumb {
+      display: none;
+    }
+    .sidx__num {
+      font-size: 0.95rem;
+    }
+
+    .sidx__preview {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 380px;
+      height: 262px;
+      z-index: 60;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate3d(var(--x, 0), var(--y, 0), 0) scale(0.96);
+      transition: opacity 0.4s var(--ease), transform 0.5s var(--ease-out);
+      box-shadow: 0 34px 70px rgba(0, 12, 36, 0.4);
+      background: var(--navy-900);
+      overflow: hidden;
+      will-change: transform, opacity;
+    }
+    .sidx__preview.is-visible {
+      opacity: 1;
+      transform: translate3d(var(--x, 0), var(--y, 0), 0) scale(1);
+    }
+    .sidx__preview::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 72px;
+      height: 5px;
+      background: var(--orange-500);
+      z-index: 2;
+    }
+    .sidx__preview-item {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.35s var(--ease);
+    }
+    .sidx__preview-item.is-active {
+      opacity: 1;
+    }
+    .sidx__preview-item :global(img) {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .sidx__preview-item :global(img.is-contain) {
+      object-fit: contain;
+      background: var(--navy-900);
+      padding: 12px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sidx__preview {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-service-index]');
+  const preview = root?.querySelector<HTMLElement>('[data-preview]');
+
+  if (root && preview && window.matchMedia('(min-width: 1080px) and (pointer: fine)').matches) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const items = [...preview.querySelectorAll<HTMLElement>('[data-preview-item]')];
+    const links = [...root.querySelectorAll<HTMLAnchorElement>('.sidx__link')];
+
+    let targetX = 0;
+    let targetY = 0;
+    let curX = 0;
+    let curY = 0;
+    let raf = 0;
+    let active = false;
+
+    const loop = () => {
+      curX += (targetX - curX) * 0.14;
+      curY += (targetY - curY) * 0.14;
+      preview.style.setProperty('--x', `${curX.toFixed(1)}px`);
+      preview.style.setProperty('--y', `${curY.toFixed(1)}px`);
+      raf = active ? requestAnimationFrame(loop) : 0;
+    };
+
+    const position = (e: PointerEvent) => {
+      const w = preview.offsetWidth;
+      const h = preview.offsetHeight;
+      // Keep the panel inside the viewport, offset from the cursor
+      targetX = Math.min(Math.max(e.clientX + 34, 12), window.innerWidth - w - 12);
+      targetY = Math.min(Math.max(e.clientY - h / 2, 12), window.innerHeight - h - 12);
+    };
+
+    links.forEach((link) => {
+      link.addEventListener('pointerenter', (e) => {
+        if (reduce || e.pointerType !== 'mouse') return;
+        const i = Number(link.dataset.idx);
+        items.forEach((item, idx) => item.classList.toggle('is-active', idx === i));
+        position(e as PointerEvent);
+        curX = targetX;
+        curY = targetY;
+        active = true;
+        preview.classList.add('is-visible');
+        if (!raf) raf = requestAnimationFrame(loop);
+      });
+
+      link.addEventListener('pointermove', (e) => {
+        if (e.pointerType === 'mouse') position(e as PointerEvent);
+      });
+
+      link.addEventListener('pointerleave', () => {
+        preview.classList.remove('is-visible');
+        active = false;
+      });
+    });
+
+    root.addEventListener('pointerleave', () => {
+      preview.classList.remove('is-visible');
+      active = false;
+    });
+  }
+</script>

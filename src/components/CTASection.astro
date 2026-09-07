@@ -1,0 +1,95 @@
+---
+import Arrow from './Arrow.astro';
+import { site } from '@/data/site';
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  body?: string;
+  primaryLabel?: string;
+  primaryHref?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+}
+const {
+  eyebrow = 'Start a conversation',
+  title = 'Tell us about your next project',
+  body = 'Whatever the size, scope or location, our team is ready to scope the work and put the right crews on your site.',
+  primaryLabel = 'Contact UOS',
+  primaryHref = '/contact',
+  secondaryLabel = 'Explore Our Services',
+  secondaryHref = '/services',
+} = Astro.props;
+---
+<section class="cta grid-texture on-dark">
+  <div class="shell">
+    <div class="cta__inner reveal">
+      <div>
+        <p class="eyebrow">{eyebrow}</p>
+        <h2 class="cta__title">{title}</h2>
+        <p class="cta__body">{body}</p>
+      </div>
+      <div class="cta__side">
+        <div class="btn-row">
+          <a href={primaryHref} class="btn btn--accent">{primaryLabel}<Arrow /></a>
+          <a href={secondaryHref} class="btn btn--on-dark">{secondaryLabel}</a>
+        </div>
+        <div class="cta__direct">
+          <a href={site.contact.phoneHref} class="cta__phone">{site.contact.phone}</a>
+          <a href={site.contact.emailHref} class="cta__email">{site.contact.email}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    background: var(--navy-800);
+    color: #fff;
+    padding-block: clamp(3.5rem, 7vw, 6.5rem);
+    position: relative;
+  }
+  .cta::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 5px;
+    background: linear-gradient(to right, var(--navy-700) 0 55%, var(--orange-500) 55%);
+  }
+  .cta__inner { display: grid; gap: 2.5rem; align-items: end; }
+  .cta__title {
+    font-size: var(--fs-h2);
+    color: #fff;
+    margin-top: 1.15rem;
+    max-width: 16ch;
+  }
+  .cta__body {
+    margin-top: 1.15rem;
+    max-width: 52ch;
+    color: #ccd6e6;
+    font-size: var(--fs-body-lg);
+  }
+  .cta__side { display: grid; gap: 2rem; }
+  .cta__direct {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,.2);
+  }
+  .cta__phone, .cta__email {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: #fff;
+    transition: color .25s var(--ease);
+  }
+  .cta__phone { font-size: 1.5rem; }
+  .cta__email { font-size: 1.15rem; align-self: center; word-break: break-word; }
+  .cta__phone:hover, .cta__email:hover { color: var(--orange-400); }
+
+  @media (min-width: 980px) {
+    .cta__inner { grid-template-columns: 1.05fr 0.95fr; gap: 4rem; }
+  }
+</style>

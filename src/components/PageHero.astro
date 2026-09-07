@@ -1,0 +1,70 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  /** Intermediate crumbs between Home and the current page. */
+  breadcrumb?: { label: string; href: string }[];
+  /** Set false to hide the trail entirely. */
+  crumbs?: boolean;
+}
+const { eyebrow, title, lead, breadcrumb = [], crumbs = true } = Astro.props;
+---
+<section class="phero grid-texture on-dark">
+  <div class="shell">
+    {crumbs && (
+      <nav class="phero__crumbs" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          {breadcrumb.map((c) => (
+            <li><a href={c.href}>{c.label}</a></li>
+          ))}
+          <li aria-current="page">{title}</li>
+        </ol>
+      </nav>
+    )}
+    <div class="phero__body">
+      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+      <h1 class="phero__title">{title}</h1>
+      <span class="angled-rule phero__rule"></span>
+      {lead && <p class="lead phero__lead">{lead}</p>}
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .phero {
+    background: var(--navy-800);
+    color: #fff;
+    padding-block: clamp(2.5rem, 6vw, 5rem) clamp(3rem, 7vw, 6rem);
+    position: relative;
+  }
+  .phero::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 5px;
+    background: linear-gradient(to right, var(--navy-700) 0 58%, var(--orange-500) 58%);
+  }
+  .phero__crumbs { margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+  .phero__crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.75rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: rgba(255,255,255,.55);
+  }
+  .phero__crumbs li + li::before { content: '/'; margin-right: 0.75rem; color: var(--orange-500); }
+  .phero__crumbs a { transition: color .25s var(--ease); }
+  .phero__crumbs a:hover { color: #fff; }
+  .phero__crumbs [aria-current] { color: #fff; }
+  .phero__title { font-size: var(--fs-h1); color: #fff; margin-block: 1.1rem 0; max-width: 18ch; }
+  .phero__rule { margin-top: 1.5rem; }
+  .phero__lead { margin-top: 1.5rem; max-width: 58ch; color: #ccd6e6; }
+</style>

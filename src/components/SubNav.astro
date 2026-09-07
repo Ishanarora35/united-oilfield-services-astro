@@ -1,0 +1,67 @@
+---
+import { services } from '@/data/services';
+interface Props { current: string }
+const { current } = Astro.props;
+---
+<nav class="subnav" aria-label="Services">
+  <div class="shell shell--wide">
+    <ul class="subnav__list">
+      {services.map((s) => (
+        <li>
+          <a
+            href={`/services/${s.slug}`}
+            class:list={['subnav__link', { 'is-current': s.slug === current }]}
+            aria-current={s.slug === current ? 'page' : undefined}
+          >
+            <span class="subnav__num">{s.number}</span>{s.navTitle}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</nav>
+
+<style>
+  .subnav {
+    background: var(--navy-900);
+    border-bottom: 1px solid rgba(255,255,255,.12);
+    overflow: hidden;
+    position: relative;
+  }
+  /* Signals that more items exist beyond the right edge */
+  .subnav::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 56px;
+    pointer-events: none;
+    background: linear-gradient(to right, rgba(0, 21, 54, 0), var(--navy-900));
+  }
+  .subnav__list {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  .subnav__link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 1.15rem;
+    white-space: nowrap;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.62);
+    border-bottom: 3px solid transparent;
+    transition: color .3s var(--ease), border-color .3s var(--ease), background-color .3s var(--ease);
+  }
+  .subnav__link:hover { color: #fff; background: rgba(255,255,255,.05); }
+  .subnav__link.is-current { color: #fff; border-bottom-color: var(--orange-500); }
+  .subnav__num { color: var(--orange-500); font-size: 0.72rem; letter-spacing: 0.14em; }
+</style>

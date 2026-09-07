@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.unitedoilfields.com/sitemap-index.xml

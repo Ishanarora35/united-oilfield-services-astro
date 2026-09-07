@@ -1,0 +1,58 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Arrow from '@/components/Arrow.astro';
+import { nav } from '@/data/site';
+---
+<BaseLayout title="Page Not Found" description="The page you were looking for could not be found. Explore United Oilfield Services' capabilities or get in touch with our team.">
+  <section class="nf grid-texture on-dark">
+    <div class="shell">
+      <p class="nf__code" aria-hidden="true">404</p>
+      <h1 class="nf__title">This page isn't on site</h1>
+      <span class="angled-rule"></span>
+      <p class="lead nf__lead">
+        The page you were looking for has moved or no longer exists. Use the links below to find
+        what you need.
+      </p>
+      <div class="btn-row nf__actions">
+        <a href="/" class="btn btn--accent">Back to Home<Arrow /></a>
+        <a href="/contact" class="btn btn--on-dark">Contact UOS</a>
+      </div>
+      <ul class="nf__links">
+        {nav.filter((n) => n.href !== '/').map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf {
+    background: var(--navy-800);
+    color: #fff;
+    padding-block: clamp(4rem, 10vw, 9rem);
+    min-height: 62svh;
+    display: grid;
+    align-items: center;
+  }
+  .nf__code {
+    font-family: var(--font-display);
+    font-size: clamp(5rem, 3rem + 12vw, 12rem);
+    font-weight: 700;
+    line-height: 0.8;
+    color: rgba(255,255,255,.14);
+    letter-spacing: -0.03em;
+  }
+  .nf__title { font-size: var(--fs-h1); color: #fff; margin-block: 1.25rem; max-width: 14ch; }
+  .nf__lead { margin-top: 1.5rem; max-width: 50ch; }
+  .nf__actions { margin-top: 2.25rem; }
+  .nf__links {
+    display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem;
+    margin-top: 3rem; padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,.2);
+  }
+  .nf__links a {
+    font-family: var(--font-display); font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-invert-soft);
+    transition: color .25s var(--ease);
+  }
+  .nf__links a:hover { color: var(--orange-400); }
+</style>

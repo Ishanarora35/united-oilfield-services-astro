@@ -1,0 +1,35 @@
+---
+import type { Capability } from '@/data/services';
+interface Props { items: Capability[]; heading?: string; startIndex?: number }
+const { items, heading, startIndex = 1 } = Astro.props;
+const detailed = items.some((i) => i.desc);
+---
+<div class="caps">
+  {heading && <h3 class="caps__h">{heading}</h3>}
+  {detailed ? (
+    <ul class="cap-list">
+      {items.map((item, i) => (
+        <li class="cap-list__item reveal" style={`--reveal-delay:${Math.min(i, 5) * 60}ms`}>
+          <span class="cap-list__idx" aria-hidden="true">
+            {String(i + startIndex).padStart(2, '0')}
+          </span>
+          <div>
+            <h3 class="cap-list__title">{item.title}</h3>
+            {item.desc && <p class="cap-list__desc">{item.desc}</p>}
+          </div>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <ul class="tick-list">
+      {items.map((item) => <li>{item.title}</li>)}
+    </ul>
+  )}
+</div>
+
+<style>
+  .caps__h {
+    font-size: var(--fs-h3);
+    margin-bottom: 1.6rem;
+  }
+</style>

@@ -1,0 +1,235 @@
+---
+import { Image } from 'astro:assets';
+import logoFullWhite from '@/assets/brand/uos-logo-full-white.png';
+import { site } from '@/data/site';
+import { services } from '@/data/services';
+
+const year = new Date().getFullYear();
+
+const company = [
+  { label: 'About', href: '/about' },
+  { label: 'Services', href: '/services' },
+  { label: 'Safety & Environment', href: '/safety' },
+  { label: 'Careers', href: '/careers' },
+  { label: 'Contact', href: '/contact' },
+];
+---
+
+<footer class="ftr grid-texture">
+  <div class="shell shell--wide">
+    <div class="ftr__top">
+      <div class="ftr__brand">
+        <a href="/" aria-label={`${site.name} — home`}>
+          <Image
+            src={logoFullWhite}
+            alt={site.name}
+            widths={[320, 640]}
+            sizes="(max-width: 700px) 260px, 320px"
+            loading="lazy"
+            format="webp"
+            quality={90}
+          />
+        </a>
+        <p class="ftr__blurb">
+          A premier multi-service provider with the experience and commitment to safety to reliably
+          provide all of your oilfield needs — upstream and midstream.
+        </p>
+        <a href="/contact" class="btn btn--accent btn--sm ftr__cta">
+          Get in Touch
+          <svg
+            class="btn__arrow"
+            width="16"
+            height="12"
+            viewBox="0 0 16 12"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path d="M1 6h13M9.5 1 14.5 6l-5 5" stroke="currentColor" stroke-width="2"></path>
+          </svg>
+        </a>
+      </div>
+
+      <nav class="ftr__cols" aria-label="Footer">
+        <div class="ftr__col">
+          <h2 class="ftr__h">Services</h2>
+          <ul>
+            {
+              services.map((s) => (
+                <li>
+                  <a href={`/services/${s.slug}`}>{s.navTitle}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="ftr__col">
+          <h2 class="ftr__h">Company</h2>
+          <ul>
+            {
+              company.map((c) => (
+                <li>
+                  <a href={c.href}>{c.label}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="ftr__col ftr__col--contact">
+          <h2 class="ftr__h">Contact</h2>
+          <address>
+            <p class="ftr__legal-name">{site.name}</p>
+            <p class="ftr__addr">
+              {site.contact.addressLines.map((l) => <span>{l}</span>)}
+            </p>
+            <a href={site.contact.phoneHref} class="ftr__strong">{site.contact.phone}</a>
+            <a href={site.contact.emailHref} class="ftr__strong ftr__email">{site.contact.email}</a>
+          </address>
+        </div>
+      </nav>
+    </div>
+
+    <div class="ftr__bottom">
+      <p>&copy; {year} {site.name}. All rights reserved.</p>
+      <p class="ftr__motto">{site.tagline}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ftr {
+    background: var(--navy-900);
+    color: var(--text-invert-soft);
+    padding-top: clamp(3.25rem, 6vw, 5.5rem);
+    border-top: 4px solid var(--orange-500);
+  }
+
+  .ftr__top {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+    padding-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .ftr__brand :global(img) {
+    width: clamp(240px, 40vw, 320px);
+    height: auto;
+  }
+  .ftr__blurb {
+    margin-top: 1.5rem;
+    max-width: 42ch;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--text-invert-soft);
+  }
+  .ftr__cta {
+    margin-top: 1.75rem;
+  }
+
+  .ftr__cols {
+    display: grid;
+    gap: 2.25rem clamp(1.5rem, 3vw, 3rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr));
+  }
+
+  .ftr__h {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #fff;
+    padding-bottom: 0.9rem;
+    margin-bottom: 1.1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    position: relative;
+  }
+  .ftr__h::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 34px;
+    height: 2px;
+    background: var(--orange-500);
+  }
+
+  .ftr__col ul {
+    display: grid;
+    gap: 0.7rem;
+  }
+  .ftr__col a {
+    font-size: 0.92rem;
+    color: var(--text-invert-soft);
+    transition: color 0.25s var(--ease), transform 0.3s var(--ease-out);
+    display: inline-block;
+  }
+  .ftr__col a:hover,
+  .ftr__col a:focus-visible {
+    color: #fff;
+    transform: translateX(3px);
+  }
+
+  address {
+    font-style: normal;
+    display: grid;
+    gap: 0.4rem;
+    justify-items: start;
+  }
+  .ftr__legal-name {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 0.2rem;
+  }
+  .ftr__addr {
+    display: grid;
+    font-size: 0.92rem;
+    margin-bottom: 0.55rem;
+  }
+  .ftr__strong {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: #fff;
+    transition: color 0.25s var(--ease);
+  }
+  .ftr__strong:hover {
+    color: var(--orange-400);
+  }
+  .ftr__email {
+    font-size: 1rem;
+    word-break: break-word;
+  }
+
+  .ftr__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.5rem;
+    justify-content: space-between;
+    align-items: center;
+    padding-block: 1.6rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.13);
+    font-size: 0.83rem;
+    color: rgba(255, 255, 255, 0.55);
+  }
+  .ftr__motto {
+    font-style: italic;
+    letter-spacing: 0.02em;
+  }
+
+  @media (min-width: 900px) {
+    .ftr__top {
+      grid-template-columns: minmax(280px, 0.95fr) 1.6fr;
+      gap: clamp(2.5rem, 5vw, 5rem);
+    }
+  }
+  @media (min-width: 1180px) {
+    .ftr__cols {
+      grid-template-columns: 1.15fr 0.85fr 1.1fr;
+    }
+  }
+</style>
