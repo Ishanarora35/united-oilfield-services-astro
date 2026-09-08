@@ -8,6 +8,7 @@ import steaming from '@/assets/services/steaming.jpg';
 import flowbackWheel from '@/assets/services/flowback-capability-wheel.png';
 import plugAbandonment from '@/assets/services/plug-abandonment.jpg';
 import cementing from '@/assets/services/cementing.jpg';
+import specialistPipe from '@/assets/services/specialist-pipe-handling.jpg';
 
 export interface Capability {
   title: string;
@@ -337,11 +338,11 @@ export const services: Service[] = [
       'Cementing, wireline support and casing & capping — delivered in-house to keep decommissioning projects on schedule.',
     metaDescription:
       'Supporting specialist disciplines from United Oilfield Services — cementing for plug and abandonment, wireline support services, and casing and capping for permanent wellbore sealing.',
-    image: cementing,
+    image: specialistPipe,
     imageAlt:
-      'Cement flowing from a mixing chute during a United Oilfield Services cementing operation',
+      'A crew member in a hard hat and safety glasses handling a stack of casing joints on a lease',
     imageMode: 'photo',
-    objectPosition: '50% 50%',
+    objectPosition: '50% 42%',
     body: [],
     capabilities: [],
     subDisciplines: [
