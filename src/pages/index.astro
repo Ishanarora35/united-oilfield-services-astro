@@ -37,11 +37,13 @@ const pillars = [
   <section class="hero-quote on-dark">
     <div class="shell">
       <div class="hero-quote__inner">
-        <p class="hero-quote__mark" aria-hidden="true">&ldquo;</p>
         <blockquote>
           <p>
-            We truly believe that our clients' success is our own, and we keep that mindset at the
-            forefront of every job, every single day.
+            <span class="hero-quote__mark" aria-hidden="true">&ldquo;</span>We truly believe that our
+            clients' success is our own, and we keep that mindset at the forefront of every job,
+            every single day.<span class="hero-quote__mark hero-quote__mark--close" aria-hidden="true"
+              >&rdquo;</span
+            >
           </p>
         </blockquote>
         <p class="hero-quote__attrib">{site.name}</p>
@@ -248,17 +250,18 @@ const pillars = [
   }
   .hero-quote__inner {
     display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: start;
-    column-gap: clamp(0.9rem, 2vw, 1.6rem);
     row-gap: 0.9rem;
+    justify-items: start;
   }
   .hero-quote__mark {
     font-family: var(--font-display);
-    font-size: clamp(2.4rem, 1.6rem + 3vw, 4rem);
-    line-height: 0.72;
+    font-size: 1.5em;
+    line-height: 0;
+    vertical-align: -0.16em;
     color: var(--orange-500);
-    grid-row: 1;
+  }
+  .hero-quote__mark--close {
+    margin-left: 0.06em;
   }
   .hero-quote blockquote p {
     font-family: var(--font-display);
@@ -271,7 +274,6 @@ const pillars = [
     max-width: 46ch;
   }
   .hero-quote__attrib {
-    grid-column: 2;
     font-family: var(--font-display);
     font-size: 0.76rem;
     font-weight: 600;
