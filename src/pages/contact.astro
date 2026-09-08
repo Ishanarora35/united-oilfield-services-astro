@@ -3,6 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHero from '@/components/PageHero.astro';
 import ContactForm from '@/components/ContactForm.astro';
 import { site } from '@/data/site';
+import contactHeroImg from '@/assets/home/hero-3-pipelines-sunset.jpg';
 
 const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
   '2472 Millview, Zeeland, Michigan, USA',
@@ -17,6 +18,9 @@ const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComp
     eyebrow="Contact"
     title="Get in Touch"
     lead="Tell us about your operation, your location and your timeline. We will put the right team on it."
+    image={contactHeroImg}
+    imageAlt="Gathering pipelines converging toward the horizon at sunset"
+    objectPosition="50% 50%"
   />
 
   <section class="section contact">

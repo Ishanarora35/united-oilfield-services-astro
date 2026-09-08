@@ -49,7 +49,7 @@ const widthsFor = (w: number) => {
           </div>
         ))
       }
-      <span class="hero__foot-shade" aria-hidden="true"></span>
+      <span class="photo-scrim" aria-hidden="true"></span>
 
       <div class="hero__nav">
         <button type="button" class="hero__ctrl" data-prev aria-label="Previous slide">
@@ -165,19 +165,14 @@ const widthsFor = (w: number) => {
     to { transform: scale(1.055); }
   }
 
-  /* Confined to the very bottom edge so photography stays clear */
-  .hero__foot-shade {
-    position: absolute;
-    inset-inline: 0;
-    bottom: 0;
-    height: 34%;
-    background: linear-gradient(to top, rgba(0, 15, 43, 0.6), rgba(0, 15, 43, 0));
-    pointer-events: none;
+  .hero__media .photo-scrim {
+    z-index: 1;
   }
 
   /* ---------- MANUAL NAV ---------- */
   .hero__nav {
     position: absolute;
+    z-index: 4;
     right: var(--gutter);
     bottom: clamp(0.9rem, 3vw, 1.5rem);
     display: flex;
@@ -205,6 +200,8 @@ const widthsFor = (w: number) => {
 
   .hero__plate-wrap {
     grid-row: 2;
+    position: relative;
+    z-index: 2;
   }
   .hero__plate {
     background: var(--navy-800);
@@ -219,6 +216,10 @@ const widthsFor = (w: number) => {
     width: 84px;
     height: 5px;
     background: var(--orange-500);
+  }
+  .hero__tagline,
+  .hero__support {
+    text-shadow: 0 2px 18px rgba(0, 12, 36, 0.5);
   }
 
   .hero__eyebrow {
@@ -301,19 +302,11 @@ const widthsFor = (w: number) => {
     .hero__media {
       position: absolute;
       inset: 0;
+      z-index: 0;
       aspect-ratio: auto;
     }
     .hero__slide :global(img) {
       object-position: var(--op, 50% 50%);
-    }
-    .hero__foot-shade {
-      height: 46%;
-      background: linear-gradient(
-        to top,
-        rgba(0, 15, 43, 0.7),
-        rgba(0, 15, 43, 0.26) 45%,
-        rgba(0, 15, 43, 0)
-      );
     }
 
     .hero__nav {
@@ -331,18 +324,19 @@ const widthsFor = (w: number) => {
     }
     .hero__plate {
       pointer-events: auto;
-      width: min(600px, 50%);
-      padding: clamp(1.75rem, 2.3vw, 2.5rem) clamp(1.75rem, 2.4vw, 2.75rem)
-        clamp(1.75rem, 2.3vw, 2.35rem);
-      background: rgba(0, 35, 94, 0.94);
-      backdrop-filter: blur(2px);
-      box-shadow: 0 30px 70px rgba(0, 12, 36, 0.4);
+      width: min(640px, 54%);
+      padding: 0 0 0 0;
+      background: transparent;
+      box-shadow: none;
+    }
+    .hero__plate::before {
+      display: none;
     }
   }
 
   @media (min-width: 1400px) {
     .hero__plate {
-      width: min(660px, 44%);
+      width: min(700px, 46%);
     }
   }
 </style>

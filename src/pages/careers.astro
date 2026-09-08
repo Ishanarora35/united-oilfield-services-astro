@@ -6,6 +6,7 @@ import ContactForm from '@/components/ContactForm.astro';
 import Arrow from '@/components/Arrow.astro';
 import { site } from '@/data/site';
 import crewImg from '@/assets/services/roustabout.jpg';
+import careersHeroImg from '@/assets/services/pumping-well-operations.jpg';
 
 const looking = [
   {
@@ -31,6 +32,9 @@ const looking = [
     eyebrow="Careers"
     title="Build Your Future With UOS"
     lead="Are you ready to build a rewarding career with United Oilfield Services?"
+    image={careersHeroImg}
+    imageAlt="United Oilfield Services operator working on pipework at a production facility"
+    objectPosition="60% 50%"
   >
     <div class="btn-row phero-actions">
       <a href="#apply" class="btn btn--accent">Send Your Resume<Arrow /></a>

@@ -1,6 +1,8 @@
 ---
+import { Image } from 'astro:assets';
 import Arrow from './Arrow.astro';
 import { site } from '@/data/site';
+import ctaImg from '@/assets/home/hero-4-pumpjack-flare.jpg';
 interface Props {
   eyebrow?: string;
   title?: string;
@@ -20,8 +22,12 @@ const {
   secondaryHref = '/services',
 } = Astro.props;
 ---
-<section class="cta grid-texture on-dark">
-  <div class="shell">
+<section class="cta on-dark">
+  <div class="cta__media" aria-hidden="true">
+    <Image src={ctaImg} alt="" widths={[900, 1400]} sizes="100vw" loading="lazy" quality={80} />
+    <span class="photo-scrim"></span>
+  </div>
+  <div class="shell cta__shell">
     <div class="cta__inner reveal">
       <div>
         <p class="eyebrow">{eyebrow}</p>
@@ -44,10 +50,27 @@ const {
 
 <style>
   .cta {
-    background: var(--navy-800);
+    background: var(--navy-950);
     color: #fff;
     padding-block: clamp(3.5rem, 7vw, 6.5rem);
     position: relative;
+    isolation: isolate;
+  }
+  .cta__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .cta__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 45% 55%;
+  }
+  .cta__shell {
+    position: relative;
+    z-index: 2;
   }
   .cta::after {
     content: '';
@@ -55,20 +78,24 @@ const {
     inset-inline: 0;
     bottom: 0;
     height: 5px;
+    z-index: 3;
     background: linear-gradient(to right, var(--navy-700) 0 55%, var(--orange-500) 55%);
   }
   .cta__inner { display: grid; gap: 2.5rem; align-items: end; }
   .cta__title {
-    font-size: var(--fs-h2);
+    font-size: var(--fs-hero);
+    line-height: 1.02;
     color: #fff;
     margin-top: 1.15rem;
-    max-width: 16ch;
+    max-width: 22ch;
+    text-shadow: 0 2px 18px rgba(0, 12, 36, 0.5);
   }
   .cta__body {
     margin-top: 1.15rem;
     max-width: 52ch;
-    color: #ccd6e6;
+    color: #dce4f0;
     font-size: var(--fs-body-lg);
+    text-shadow: 0 1px 12px rgba(0, 12, 36, 0.55);
   }
   .cta__side { display: grid; gap: 2rem; }
   .cta__direct {
