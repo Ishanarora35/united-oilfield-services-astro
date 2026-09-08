@@ -98,7 +98,7 @@ const {
     padding-block: clamp(2.5rem, 5vw, 4rem) clamp(3rem, 6vw, 5rem);
     display: grid;
     align-items: end;
-    min-height: clamp(340px, 46vw, 560px);
+    min-height: clamp(420px, 62vw, 620px);
   }
   /* Reaches further up the frame so the breadcrumb stays legible over bright skies */
   .phero--photo .photo-scrim {
@@ -177,5 +177,12 @@ const {
   .phero--photo .phero__lead,
   .phero--photo .phero__crumbs ol {
     text-shadow: 0 1px 12px rgba(0, 12, 36, 0.55);
+  }
+
+  /* Photo heroes match the homepage hero's presence on desktop */
+  @media (min-width: 1024px) {
+    .phero--photo {
+      min-height: clamp(600px, calc(100svh - var(--header-h)), 900px);
+    }
   }
 </style>
