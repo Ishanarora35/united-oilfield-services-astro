@@ -3,7 +3,7 @@ export const site = {
   shortName: 'United Oilfield Services',
   brand: 'UOS',
   tagline: 'Build on Safety, Governed by Trust',
-  url: 'https://www.unitedoilfields.com',
+  url: 'https://unitedoilfields.com',
   description:
     'United Oilfield Services is a premier multi-service provider with the experience and commitment to safety to reliably provide all of your oilfield needs across upstream and midstream operations.',
   contact: {

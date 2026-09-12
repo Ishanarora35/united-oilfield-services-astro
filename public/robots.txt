@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://united-oilfield-services-astro.vercel.app/sitemap-index.xml
+Sitemap: https://unitedoilfields.com/sitemap-index.xml
