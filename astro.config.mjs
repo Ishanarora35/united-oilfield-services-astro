@@ -10,7 +10,7 @@ export default defineConfig({
     }),
   ],
   trailingSlash: 'never',
-  build: { inlineStylesheets: 'auto' },
+  build: { inlineStylesheets: 'auto', format: 'file' },
   image: {
     // Generated variants: keep photographic detail, avoid mushy re-compression
     experimentalLayout: 'constrained',
