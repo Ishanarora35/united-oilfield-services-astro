@@ -7,8 +7,8 @@ export const site = {
   description:
     'United Oilfield Services is a premier multi-service provider with the experience and commitment to safety to reliably provide all of your oilfield needs across upstream and midstream operations.',
   contact: {
-    addressLines: ['2472, Millview', 'Zeeland, Michigan — USA'],
-    addressInline: '2472, Millview, Zeeland, Michigan — USA',
+    addressLines: ['2472 Millview', 'Zeeland, Michigan — 49464'],
+    addressInline: '2472 Millview, Zeeland, Michigan — 49464',
     phone: '616-210-9891',
     phoneHref: 'tel:+16162109891',
     email: 'office@unitedoilfields.com',
