@@ -7,6 +7,7 @@ import CapabilityList from '@/components/CapabilityList.astro';
 import CTASection from '@/components/CTASection.astro';
 import Arrow from '@/components/Arrow.astro';
 import { services } from '@/data/services';
+import { site } from '@/data/site';
 
 export function getStaticPaths() {
   return services.map((service, i) => ({
@@ -24,9 +25,29 @@ const { service: s, prev, next } = Astro.props;
 /** Alternate the intro composition so no two service pages read the same. */
 const flip = Number(s.number) % 2 === 0;
 const hasDetailedCaps = s.capabilities.some((c) => c.desc);
+
+/** Built only from copy already published on this page. */
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: s.title,
+  description: s.metaDescription,
+  url: new URL(`/services/${s.slug}`, Astro.site).href,
+  serviceType: s.navTitle,
+  provider: {
+    '@type': 'Organization',
+    name: site.name,
+    url: site.url,
+    telephone: site.contact.phone,
+  },
+  areaServed: {
+    '@type': 'Country',
+    name: 'United States',
+  },
+};
 ---
 
-<BaseLayout title={s.title} description={s.metaDescription}>
+<BaseLayout title={s.title} description={s.metaDescription} schema={serviceSchema}>
   <ServiceHero service={s} />
   <SubNav current={s.slug} />
 

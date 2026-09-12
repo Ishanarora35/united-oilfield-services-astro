@@ -17,6 +17,8 @@ interface Props {
   ogImage?: string;
   /** Lets the hero sit directly beneath a transparent-free solid header. */
   bodyClass?: string;
+  /** Extra JSON-LD emitted alongside the Organization schema. */
+  schema?: Record<string, unknown>;
 }
 
 const {
@@ -25,10 +27,18 @@ const {
   bareTitle = false,
   ogImage = '/og-united-oilfield-services.jpg',
   bodyClass = '',
+  schema,
 } = Astro.props;
 
 const fullTitle = bareTitle ? title : `${title} | ${site.shortName}`;
-const canonical = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', Astro.site).href;
+// build.format 'file' emits /about.html, so strip the extension before building the
+// canonical — otherwise every canonical points at a URL that 308-redirects.
+const canonicalPath =
+  Astro.url.pathname
+    .replace(/index\.html$/, '')
+    .replace(/\.html$/, '')
+    .replace(/\/$/, '') || '/';
+const canonical = new URL(canonicalPath, Astro.site).href;
 const ogUrl = new URL(ogImage, Astro.site).href;
 
 const orgSchema = {
@@ -64,7 +74,7 @@ const orgSchema = {
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="sitemap" href="/sitemap.xml" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
@@ -98,6 +108,7 @@ const orgSchema = {
       })();
     </script>
     <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} is:inline />
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />}
   </head>
 
   <body class={bodyClass}>
